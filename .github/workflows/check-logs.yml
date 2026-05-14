@@ -15,12 +15,14 @@ jobs:
         run: |
           logsOutput=$(./.github/check_logs)
           echo $logsOutput
-          echo "logsOutput=`echo $logsOutput | sed s/%/\\n/g`" >> $GITHUB_OUTPUT
+          echo "logsOutput=`echo $logsOutput`" >> $GITHUB_OUTPUT
           echo "logLines=`echo $logsOutput | wc -l`" >> $GITHUB_OUTPUT
       - uses: sarisia/actions-status-discord@v1
         if: ${{ steps.logsChecking.outputs.logLines != '0' }}
+        id: webhook
         with:
-          webhook: ${{ secrets.WEBHOOK_URL }}
+          nofail: false
+          ack_no_webhook: true
           status: ${{ job.status }}
           nodetail: true
           username: "Your Dad"
@@ -31,3 +33,19 @@ jobs:
             ${{ steps.logsChecking.outputs.logsOutput }}
 
             https://github.com/rockymoto517/Eclipse-Difficulty-test/commit/${{ github.sha }}
+      - if: ${{ steps.logsChecking.outputs.logLines != '0' }}
+        run: npm install axios
+      - if: ${{ steps.logsChecking.outputs.logLines != '0' }}
+        uses: actions/github-script@v7
+        env:
+          WEBHOOK_PAYLOAD: ${{ steps.webhook.outputs.payload }}
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          script: |
+            const axios = require("axios")
+            const { WEBHOOK_PAYLOAD, WEBHOOK_URL } = process.env
+            const payload = JSON.parse(WEBHOOK_PAYLOAD)
+      
+            payload.embeds[0].description = payload.embeds[0].description.replace(/%/g, "\n")
+      
+            axios.post(WEBHOOK_URL, payload)
