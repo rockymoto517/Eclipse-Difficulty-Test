@@ -46,5 +46,6 @@ jobs:
             const { WEBHOOK_PAYLOAD, WEBHOOK_URL } = process.env
             const payload = JSON.parse(WEBHOOK_PAYLOAD)
       
-            payload.embeds[0].description = payload.embeds[0].description.replace(/%/g, "\n")
+            // crude custom formatting
+            payload.embeds[0].description = payload.embeds[0].description.replace(/%/g, "\n").replace(/\^/g, "\t")
             axios.post(WEBHOOK_URL, payload)
