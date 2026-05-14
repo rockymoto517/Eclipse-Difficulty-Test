@@ -17,6 +17,7 @@ jobs:
           echo $logsOutput
           echo "logsOutput=`echo $logsOutput`" >> $GITHUB_OUTPUT
           echo "logLines=`echo $logsOutput | wc -l`" >> $GITHUB_OUTPUT
+          echo ${{ steps.logsChecking.outputs.logLines != '0' }}
       - uses: sarisia/actions-status-discord@v1
         if: ${{ steps.logsChecking.outputs.logLines != '0' }}
         id: webhook
