@@ -39,7 +39,7 @@ jobs:
         uses: actions/github-script@v7
         env:
           WEBHOOK_PAYLOAD: ${{ steps.webhook.outputs.payload }}
-          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         with:
           script: |
             const axios = require("axios")
@@ -47,5 +47,4 @@ jobs:
             const payload = JSON.parse(WEBHOOK_PAYLOAD)
       
             payload.embeds[0].description = payload.embeds[0].description.replace(/%/g, "\n")
-      
             axios.post(WEBHOOK_URL, payload)
