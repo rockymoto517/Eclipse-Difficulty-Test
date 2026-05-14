@@ -15,15 +15,16 @@ jobs:
         run: |
           logsOutput=$(./.github/check_logs)
           echo "logsOutput=`echo $logsOutput  | sed 's/$/\n/'`" >> $GITHUB_OUTPUT
+          echo "logLines=`echo $logsOutput | wc -l`" >> $GITHUB_OUTPUT
       - uses: sarisia/actions-status-discord@v1
-        if: always()
+        if: ${{ steps.logsChecking.outputs.logLines == "0" }}
         with:
           webhook: ${{ secrets.WEBHOOK_URL }}
           status: ${{ job.status }}
           nodetail: true
           username: "Your Dad"
           color: 0xffff00
-          avatar_url: ${{ secrets.AVATAR_URL }}
+          # avatar_url: ${{ secrets.AVATAR_URL }}
           title: "Extra Debug Log(s) Found"
           description: |
             ${{ steps.logsChecking.outputs.logsOutput }}
