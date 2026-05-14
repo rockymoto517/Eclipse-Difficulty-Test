@@ -14,6 +14,7 @@ jobs:
         id: logsChecking
         run: |
           logsOutput=$(./.github/check_logs)
+          echo $logsOutput
           echo "logsOutput=`echo $logsOutput`" >> $GITHUB_OUTPUT
           echo "logLines=`echo $logsOutput | wc -l`" >> $GITHUB_OUTPUT
       - uses: sarisia/actions-status-discord@v1
