@@ -140,9 +140,9 @@ def main():
                 if len(results) > 0: found[file] = results
 
     if (len(found) > 0):
-        print("Found logs in:\\\\")
+        print("Found logs in:%")
         for file in found.keys():
-            print(f"    {file}: line{len(found[file]) > 1 and "s" or ""} {", ".join([str(f) for f in found[file]])}", end="\\\\")
+            print(f"    {file}: line{len(found[file]) > 1 and "s" or ""} {", ".join([str(f) for f in found[file]])}", end="%")
         return 1
     return 0
 

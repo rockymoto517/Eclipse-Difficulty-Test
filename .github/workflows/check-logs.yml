@@ -15,7 +15,7 @@ jobs:
         run: |
           logsOutput=$(./.github/check_logs)
           echo $logsOutput
-          echo "logsOutput=`echo $logsOutput | sed s/\\\\\\\\/\n/g`" >> $GITHUB_OUTPUT
+          echo "logsOutput=`echo $logsOutput | sed s/%/\n/g`" >> $GITHUB_OUTPUT
           echo "logLines=`echo $logsOutput | wc -l`" >> $GITHUB_OUTPUT
       - uses: sarisia/actions-status-discord@v1
         if: ${{ steps.logsChecking.outputs.logLines != '0' }}
